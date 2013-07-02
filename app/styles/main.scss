@@ -1,0 +1,29 @@
+$iconSpritePath: "../images/glyphicons-halflings.png";
+$iconWhiteSpritePath: "../images/glyphicons-halflings-white.png";
+
+@import 'sass-bootstrap/lib/bootstrap';
+
+.hero-unit {
+    margin: 50px auto 0 auto;
+    width: 300px;
+}
+
+/* bocoup barchart style */
+.Barchart .label {
+  font-size: 10px;
+}
+.Barchart .ylabels .tick line {
+  fill: none;
+  stroke: #222;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+.Barchart path.domain {
+  fill: none;
+  stroke: #222;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+.Barchart .bars rect.bar {
+  fill: #97E8A2;
+}
