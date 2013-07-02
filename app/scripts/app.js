@@ -3,7 +3,7 @@ define(['datagen', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], functi
   'use strict';
 
   function init() {
-    var d = datagen.generate(9, datagen.criteria.low, 90, 'adjacent');
+    var d = datagen.generate(10, datagen.criteria.low, 90, 'nonadjacent', 7);
 
     var myown = d3.select('#vis-myown')
       .append('svg')

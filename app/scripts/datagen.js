@@ -2,6 +2,8 @@
 define(['d3'], function () {
   'use strict';
 
+  // TODO make JSONified area with information that the cleveland module needs
+
   var criteria = {
     "low":          {"min": 0.80, "max":0.99},
     "mediumLow":    {"min": 0.60, "max":0.80},
@@ -11,11 +13,6 @@ define(['d3'], function () {
   };
 
   function generate(length, criteria, minSum, adjacency, adjacencyLength) {
-    if(length > 9) {
-      console.log('Do not go past 9, or else. Setting length to 9.');
-      length = 9;
-    }
-
     var dataset;
     var attempt = null;
     var arr = null;
@@ -104,10 +101,9 @@ define(['d3'], function () {
     var aNewLoc = randomInt(0, newArr.length)
       , bNewLoc = randomInt(0, newArr.length);
 
-    while(Math.abs(aNewLoc - bNewLoc) < len) {
+    while(Math.abs(aNewLoc - bNewLoc) !== len+1) {
       aNewLoc = randomInt(-1, newArr.length-1);
       bNewLoc = randomInt(-1, newArr.length-1);
-      console.log(Math.abs(aNewLoc - bNewLoc));
     }
 
     swap(newArr, aNewLoc, aLoc); 
@@ -130,7 +126,7 @@ define(['d3'], function () {
 
   function randomizeData(len) { 
     var max = 36;
-    var min = 3;
+    var min = 1;
   
     var d = [];
   
