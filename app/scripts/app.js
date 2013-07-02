@@ -3,14 +3,16 @@ define(['datagen', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], functi
   'use strict';
 
   function init() {
-    var d = datagen.generate(10, datagen.criteria.low, 90, 'nonadjacent', 7);
+    var d = datagen.generate(10, 'low', 90, 'nonadjacent', 7);
+
+    console.log(d.metadata);
 
     var myown = d3.select('#vis-myown')
       .append('svg')
       .style('border', 'solid 1px #aaa')
       .chart('barchart-myown');
 
-    myown.draw(d);
+    myown.draw(d.data);
 
     var remake = d3.select('#vis-remake')
       .append('svg')
@@ -19,7 +21,7 @@ define(['datagen', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], functi
       .attr('width', 600)
       .chart('barchart-remake');
 
-    remake.draw(d);
+    remake.draw(d.data);
     remake.max(40);
   }
 

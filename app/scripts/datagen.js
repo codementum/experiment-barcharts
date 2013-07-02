@@ -2,8 +2,6 @@
 define(['d3'], function () {
   'use strict';
 
-  // TODO make JSONified area with information that the cleveland module needs
-
   var criteria = {
     "low":          {"min": 0.80, "max":0.99},
     "mediumLow":    {"min": 0.60, "max":0.80},
@@ -12,15 +10,17 @@ define(['d3'], function () {
     "high":         {"min": 0.01, "max":0.20}
   };
 
-  function generate(length, criteria, minSum, adjacency, adjacencyLength) {
-    var dataset;
+  var dataset = [];
+  var metadata = {};
+
+  function generate(length, criteriaSelection, minSum, adjacency, adjacencyLength) {
     var attempt = null;
     var arr = null;
 
     while (!attempt) {
       arr = randomizeData(length);
       if(sum(arr) > minSum)
-        attempt = mark(arr, criteria);
+        attempt = mark(arr, criteria[criteriaSelection]);
     }
 
     dataset = constructLabeledDataset(arr, attempt);
@@ -33,7 +33,17 @@ define(['d3'], function () {
       }
     }
 
-    return dataset;
+    metadata.aIndex = find(dataset, 'A');
+    metadata.aValue = dataset[metadata.aIndex].value;
+    metadata.bIndex = find(dataset, 'B');
+    metadata.bValue = dataset[metadata.bIndex].value;
+    metadata.diff = attempt.diff;
+    metadata.criteria = criteriaSelection;
+
+    return {
+      data: dataset,
+      metadata: metadata
+    };
   }
 
   function constructLabeledDataset(arr, marks) {
