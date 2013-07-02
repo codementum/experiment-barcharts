@@ -22,6 +22,7 @@ d3.chart('barchart-remake', {
     chart.w = chart.base.attr('width') || 200;
     chart.h = chart.base.attr('height') || 150;
 
+
     // chart margins to account for labels.
     // we may want to have setters for this
     // if we were letting the users customize this too
@@ -35,10 +36,10 @@ d3.chart('barchart-remake', {
 
     // default chart ranges
     chart.x =  d3.scale.linear()
-      .range([0, chart.w - chart.margins.left]);
+      .range([chart.margins.padding, chart.w - chart.margins.left]);
 
     chart.y = d3.scale.linear()
-      .range([chart.h - chart.margins.bottom, 0]);
+      .range([chart.h - chart.margins.bottom, chart.margins.top]);
 
     chart.base
       .classed('Barchart', true);
@@ -86,10 +87,12 @@ d3.chart('barchart-remake', {
 
         // how many bars?
         chart.bars = data.length;
-
+        
         // compute box size
-        chart.bar_width = (chart.w - chart.margins.left - ((chart.bars - 1) *
-          chart.margins.padding)) / chart.bars;
+        if(!chart.bar_width) {
+          chart.bar_width = (chart.w - chart.margins.left - ((chart.bars - 1) *
+            chart.margins.padding)) / chart.bars;
+        }
 
         // adjust the x domain - the number of bars.
         chart.x.domain([0, chart.bars]);
@@ -217,12 +220,13 @@ d3.chart('barchart-remake', {
     this.y = d3.scale.linear()
       .range([this.h - this.margins.top, this.margins.bottom]);
 
-    // adjust the base width
+    // adjust the base height
     this.base.attr('height', this.h);
 
     this.draw(this.data);
     return this;
   }
+
 });
 
 });

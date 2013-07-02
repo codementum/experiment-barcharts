@@ -18,7 +18,7 @@ define(['d3', 'd3chart'], function () {
       this.layer('bars', this.base.append('g'), {
 
         dataBind: function(data) {
-          var d = data.values;
+          var d = data;
           // set width to accomodate data length
           c.w = (c.barWidth * 2 * d.length);
           // reset svg-level width
@@ -27,7 +27,7 @@ define(['d3', 'd3chart'], function () {
           c.xScale.domain([0, d.length])
             .range([c.pad*2, c.w - c.pad]);
           // set xScale to acoomodate data size
-          c.yScale.domain([0, c.hardMax ? c.hardMax : d3.max(d)])
+          c.yScale.domain([0, c.hardMax ? c.hardMax : d3.max(d, function(d) { return d.value; })]) // might need getter
             .range([0, c.h - c.pad]);
           // if width should expand, adjust xScale and barWidth
           if(c.fillWidth){
@@ -74,16 +74,16 @@ define(['d3', 'd3chart'], function () {
         events: {
           'enter': function() {
             return this.attr('x', function(d, i) { return c.xScale(i); })
-                    .attr('y', function(d) { return c.h - c.yScale(d) - c.pad; })
+                    .attr('y', function(d) { return c.h - c.yScale(d.value) - c.pad; })
                     .attr('width', c.barWidth)
-                    .attr('height', function (d) { return c.yScale(d); });
+                    .attr('height', function(d) { return c.yScale(d.value); });
           }
         }
       });
 
       this.layer('labels', this.base.append('g'), {
         dataBind: function(data) {
-          var d = data.labels;
+          var d = data;
           return this.selectAll('text').data(d);
         },
 
@@ -97,7 +97,7 @@ define(['d3', 'd3chart'], function () {
                     .attr('y', function() { return c.h - c.pad/2; })
                     .attr('font-size', 10)
                     .attr('text-anchor', 'middle')
-                    .text(function(d) { return d; });
+                    .text(function(d) { return d.name; });
           }
         }
       });
