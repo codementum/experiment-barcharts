@@ -2,7 +2,6 @@
 define(['d3'], function () {
   'use strict';
 
-  // given a random set, find if any meet the type criteria
   var criteria = {
     "low":          {"min": 0.80, "max":0.99},
     "mediumLow":    {"min": 0.60, "max":0.80},
@@ -11,7 +10,65 @@ define(['d3'], function () {
     "high":         {"min": 0.01, "max":0.20}
   };
 
-  var d = generate(9, criteria.low, 90);
+  function generate(length, criteria, minSum, adjacency, adjacencyLength) {
+    if(length > 9) {
+      console.log('Do not go past 9, or else. Setting length to 9.');
+      length = 9;
+    }
+
+    var dataset;
+    var attempt = null;
+    var arr = null;
+
+    while (!attempt) {
+      arr = randomizeData(length);
+      if(sum(arr) > minSum)
+        attempt = mark(arr, criteria);
+    }
+
+    dataset = constructLabeledDataset(arr, attempt);
+
+    if(adjacency) {
+      if(adjacency === 'adjacent') {
+        dataset = makeAdjacent(dataset);
+      } else if (adjacency === 'nonadjacent' && adjacencyLength) {
+        dataset = makeNonAdjacent(dataset, adjacencyLength);
+      }
+    }
+
+    return dataset;
+  }
+
+  function constructLabeledDataset(arr, marks) {
+    var dataset = []
+      , smallerIsA = randomInt(0, 2) > 1 ? true : false;
+
+    arr.forEach(function(d, i) {
+      var name = '';
+      var value = d;
+
+      if(i === marks.index) {
+        if(smallerIsA)
+          name = 'A';
+        else
+          name = 'B';
+      }
+
+      if(i === marks.coindex) {
+        if(!smallerIsA)
+          name = 'A';
+        else
+          name = 'B';
+      }
+      
+      dataset[i] = {
+        name: name,
+        value: value
+      };
+    });
+
+    return dataset;
+  }
 
   function makeAdjacent(arr) {
     var aLoc   = find(arr, 'A')
@@ -59,66 +116,6 @@ define(['d3'], function () {
     return newArr;
   }
 
-  function swap(arr, a, b) {
-    var temp = arr[a];
-    arr[a] = arr[b];
-    arr[b] = temp;
-  }
-
-  function generate(length, criteria, minSum) {
-    if(length > 9) {
-      console.log('Do not go past 9, or else. Setting length to 9.');
-      length = 9;
-    }
-    var attempt = null;
-    var arr = null;
-
-    while (!attempt) {
-      arr = randomizeData(length);
-      if(sum(arr) > minSum)
-        attempt = mark(arr, criteria);
-    }
-
-    return constructLabeledDataset(arr, attempt);
-  }
-
-  function constructLabeledDataset(arr, marks) {
-    var dataset = []
-      , smallerIsA = randomInt(0, 2) > 1 ? true : false;
-
-    arr.forEach(function(d, i) {
-      var name = '';
-      var value = d;
-
-      if(i === marks.index) {
-        if(smallerIsA)
-          name = 'A';
-        else
-          name = 'B';
-      }
-
-      if(i === marks.coindex) {
-        if(!smallerIsA)
-          name = 'A';
-        else
-          name = 'B';
-      }
-      
-      dataset[i] = {
-        name: name,
-        value: value
-      };
-    });
-
-    return dataset;
-  }
-
-  function sum(arr) {
-    var total = 0;
-    for(var i in arr) { total += arr[i]; }
-    return total;
-  }
-
   function mark(arr, range) {
     var index = randomInt(0, arr.length-1)
       , value = arr[index];
@@ -129,14 +126,6 @@ define(['d3'], function () {
         return {"index": index, "value": value, "coindex": i, "covalue": covalue, "diff": diff};
     }
     return null;
-  }
-
-  function randomInt(min, max) {
-    return Math.ceil(Math.random()*max + min);
-  }
-
-  function plusOrMinus() {
-    return Math.random() < 0.5 ? -1 : 1; 
   }
 
   function randomizeData(len) { 
@@ -169,12 +158,27 @@ define(['d3'], function () {
     return result;
   }
 
-  function data() {
-    return d;
+  function swap(arr, a, b) {
+    var temp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = temp;
+  }
+
+  function sum(arr) {
+    var total = 0;
+    for(var i in arr) { total += arr[i]; }
+    return total;
+  }
+
+  function randomInt(min, max) {
+    return Math.ceil(Math.random()*max + min);
+  }
+
+  function plusOrMinus() {
+    return Math.random() < 0.5 ? -1 : 1; 
   }
 
   return {
-    data: data,
     generate: generate,
     criteria: criteria
   };
