@@ -11,7 +11,59 @@ define(['d3'], function () {
     "high":         {"min": 0.01, "max":0.20}
   };
 
-  var d = generate(7, criteria.medium, 90);
+  var d = generate(9, criteria.low, 90);
+
+  function makeAdjacent(arr) {
+    var aLoc   = find(arr, 'A')
+      , bLoc   = find(arr, 'B')
+      , newArr = arr.splice(0);
+    
+    if(aLoc === 0) {
+      swap(newArr, 1, bLoc); 
+    } else if(aLoc === newArr.length-1) {
+      swap(newArr, newArr.length-2, bLoc); 
+    } else {
+      var newBLoc = plusOrMinus() + aLoc;
+      swap(newArr, newBLoc, bLoc); 
+    }
+
+    return newArr;
+  }
+
+  function find(arr, letter) {
+    var loc = -1;
+    arr.forEach(function(d, i) {
+      if(d.name === letter)
+        loc = i;
+    });
+    return loc;
+  }
+
+  function makeNonAdjacent(arr, len) {
+    var aLoc   = find(arr, 'A')
+      , bLoc   = find(arr, 'B')
+      , newArr = arr.splice(0);
+
+    var aNewLoc = randomInt(0, newArr.length)
+      , bNewLoc = randomInt(0, newArr.length);
+
+    while(Math.abs(aNewLoc - bNewLoc) < len) {
+      aNewLoc = randomInt(-1, newArr.length-1);
+      bNewLoc = randomInt(-1, newArr.length-1);
+      console.log(Math.abs(aNewLoc - bNewLoc));
+    }
+
+    swap(newArr, aNewLoc, aLoc); 
+    swap(newArr, bNewLoc, bLoc); 
+    
+    return newArr;
+  }
+
+  function swap(arr, a, b) {
+    var temp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = temp;
+  }
 
   function generate(length, criteria, minSum) {
     if(length > 9) {
@@ -62,14 +114,14 @@ define(['d3'], function () {
   }
 
   function sum(arr) {
-    var total=0;
+    var total = 0;
     for(var i in arr) { total += arr[i]; }
     return total;
   }
 
   function mark(arr, range) {
-    var index   = randomInt(0, arr.length-1)
-      , value   = arr[index];
+    var index = randomInt(0, arr.length-1)
+      , value = arr[index];
     for(var i = 0; i < arr.length; i++) {
       var covalue = arr[i]
         , diff = value/covalue;
@@ -83,14 +135,10 @@ define(['d3'], function () {
     return Math.ceil(Math.random()*max + min);
   }
 
-  /* randomize data according to Cleveland84
-   * specifically:
-   *  - 5 numbers
-   *  - add to 100
-   *  - none less than 3
-   *  - none greater than 39
-   *  - differences greater than .1
-   */
+  function plusOrMinus() {
+    return Math.random() < 0.5 ? -1 : 1; 
+  }
+
   function randomizeData(len) { 
     var max = 36;
     var min = 3;
@@ -127,6 +175,7 @@ define(['d3'], function () {
 
   return {
     data: data,
-    generate: generate
+    generate: generate,
+    criteria: criteria
   };
 });
