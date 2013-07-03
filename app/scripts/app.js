@@ -3,18 +3,53 @@ define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart']
   'use strict';
 
   function init() {
-    var d = datagen.generate(10, 'low', 90, 'nonadjacent', 7);
+    // Since we only need five, do it the hard way.
 
+    // make initial dataset
+    var d = datagen.generate(10, 'medium', 90);
     console.log(d.metadata);
 
-    var myown = d3.select('#vis-myown .vis')
+    // make adjacent
+    d.data = datagen.makeAdjacent(d.data);
+    d3.select('#vis-adjacent .vis')
       .append('svg')
-      .chart('barchart-myown');
+      .chart('barchart-myown')
+      .draw(d.data);
+    util.download('#vis-adjacent .vis', '#vis-adjacent .instructions', 'adjacent');
+    
+    // make nonAdjacentOne
+    d.data = datagen.makeNonAdjacent(d.data, 1);
+    d3.select('#vis-nonAdjacentOne .vis')
+      .append('svg')
+      .chart('barchart-myown')
+      .draw(d.data);
+    util.download('#vis-nonAdjacentOne .vis', '#vis-nonAdjacentOne .instructions', 'adjacent');
+    
+    // make nonAdjacentThree
+    d.data = datagen.makeNonAdjacent(d.data, 3);
+    d3.select('#vis-nonAdjacentThree .vis')
+      .append('svg')
+      .chart('barchart-myown')
+      .draw(d.data);
+    util.download('#vis-nonAdjacentThree .vis', '#vis-nonAdjacentThree .instructions', 'adjacent');
+    
+    // make nonAdjacentFive
+    d.data = datagen.makeNonAdjacent(d.data, 5);
+    d3.select('#vis-nonAdjacentFive .vis')
+      .append('svg')
+      .chart('barchart-myown')
+      .draw(d.data);
+    util.download('#vis-nonAdjacentFive .vis', '#vis-nonAdjacentFive .instructions', 'adjacent');
 
-    myown.draw(d.data);
+    // make nonAdjacentSeve
+    d.data = datagen.makeNonAdjacent(d.data, 7);
+    d3.select('#vis-nonAdjacentSeven .vis')
+      .append('svg')
+      .chart('barchart-myown')
+      .draw(d.data);
+    util.download('#vis-nonAdjacentSeven .vis', '#vis-nonAdjacentSeven .instructions', 'adjacent');
 
-    util.download('#vis-myown .vis', '#vis-myown .instructions', 'tested');
-
+    /*
     var remake = d3.select('#vis-remake .vis')
       .append('svg')
       .attr('height', 300)
@@ -25,6 +60,7 @@ define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart']
     remake.max(40);
 
     util.download('#vis-remake .vis', '#vis-remake .instructions', 'tested');
+    */
   }
 
   return {

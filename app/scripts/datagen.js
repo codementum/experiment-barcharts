@@ -33,11 +33,10 @@ define(['d3'], function () {
       }
     }
 
-    metadata.aIndex = find(dataset, 'A');
-    metadata.aValue = dataset[metadata.aIndex].value;
-    metadata.bIndex = find(dataset, 'B');
-    metadata.bValue = dataset[metadata.bIndex].value;
+    metadata.aValue = dataset[find(dataset, 'A')].value;
+    metadata.bValue = dataset[find(dataset, 'B')].value;
     metadata.diff = attempt.diff;
+    metadata.actual = Math.floor(attempt.diff * 100);
     metadata.criteria = criteriaSelection;
 
     return {
@@ -185,7 +184,9 @@ define(['d3'], function () {
   }
 
   return {
-    generate: generate,
-    criteria: criteria
+    generate:         generate,
+    criteria:         criteria,
+    makeAdjacent:     makeAdjacent,
+    makeNonAdjacent:  makeNonAdjacent
   };
 });
