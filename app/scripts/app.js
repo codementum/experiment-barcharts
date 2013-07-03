@@ -1,5 +1,5 @@
 /*global define, d3 */
-define(['datagen', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], function (datagen) {
+define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], function (datagen, util) {
   'use strict';
 
   function init() {
@@ -7,22 +7,24 @@ define(['datagen', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], functi
 
     console.log(d.metadata);
 
-    var myown = d3.select('#vis-myown')
+    var myown = d3.select('#vis-myown .vis')
       .append('svg')
-      .style('border', 'solid 1px #aaa')
       .chart('barchart-myown');
 
     myown.draw(d.data);
 
-    var remake = d3.select('#vis-remake')
+    util.download('#vis-myown .vis', '#vis-myown .instructions', 'tested');
+
+    var remake = d3.select('#vis-remake .vis')
       .append('svg')
-      .style('border', 'solid 1px #aaa')
       .attr('height', 300)
       .attr('width', 600)
       .chart('barchart-remake');
 
     remake.draw(d.data);
     remake.max(40);
+
+    util.download('#vis-remake .vis', '#vis-remake .instructions', 'tested');
   }
 
   return {
