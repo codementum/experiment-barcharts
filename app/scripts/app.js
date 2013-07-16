@@ -37,6 +37,7 @@ define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart']
       .draw(d.data);
   
     util.download(vis, ins, c.name+'-'+level);
+    console.log(d.metadata);
     updateMetadata(d.metadata);
   }
 

@@ -5,13 +5,14 @@ define(['d3', 'd3chart'], function () {
   d3.chart('barchart-myown', {
     initialize: function() {
       var c = this;
-      c.w        = 300;
+      c.w        = 600;
       c.h        = 300;
       c.pad      = 20;
       c.barWidth = 10;
       c.hardMax  = 40;
       c.xScale   = d3.scale.linear();
       c.yScale   = d3.scale.linear();
+      c.fillWidth = true;
       // reset svg-level height
       c.base.attr('height', c.h);
 
@@ -19,6 +20,12 @@ define(['d3', 'd3chart'], function () {
 
         dataBind: function(data) {
           var d = data;
+          c.hardMax  = d3.max(d, function(d) { return d.value*1.1; });
+          // if width should expand, adjust xScale and barWidth
+          if(c.fillWidth){
+            c.barWidth  = (c.w/d.length)/2;
+            c.xScale.range([c.barWidth + c.pad, c.w - c.pad]);
+          }
           // set width to accomodate data length
           c.w = (c.barWidth * 2 * d.length);
           // reset svg-level width
@@ -29,11 +36,6 @@ define(['d3', 'd3chart'], function () {
           // set xScale to acoomodate data size
           c.yScale.domain([0, c.hardMax ? c.hardMax : d3.max(d, function(d) { return d.value; })]) // might need getter
             .range([0, c.h - c.pad]);
-          // if width should expand, adjust xScale and barWidth
-          if(c.fillWidth){
-            c.barWidth  = (c.w/d.length)/2;
-            c.xScale.range([c.barWidth + c.pad, c.w - c.pad]);
-          }
           // y axis line
           this.append('line')
               .attr('y1', c.pad)

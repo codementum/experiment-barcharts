@@ -2,6 +2,17 @@
 define(['d3'], function () {
   'use strict';
 
+  // TODO allow integration of existing bars and A/B choices into a chart. 
+  // OR: define exact criteria for the levels
+  
+  //var criteria = {
+  //  "low":          {"min": 0.89, "max":0.90},
+  //  "mediumLow":    {"min": 0.69, "max":0.70},
+  //  "medium":       {"min": 0.49, "max":0.50},
+  //  "mediumHigh":   {"min": 0.29, "max":0.30},
+  //  "high":         {"min": 0.09, "max":0.10}
+  //};
+
   var criteria = {
     "low":          {"min": 0.80, "max":0.99},
     "mediumLow":    {"min": 0.60, "max":0.80},
@@ -134,7 +145,7 @@ define(['d3'], function () {
   }
 
   function randomizeData(len) { 
-    var max = 36; // TODO this limits the number of bars we can add
+    var max = 100; // TODO this limits the number of bars we can add
     var min = 1;
   
     var d = [];
