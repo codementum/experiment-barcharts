@@ -9,13 +9,13 @@ define(['d3'], function () {
 
   function download(targetDiv, targetLink, filename) {
     var filename = filename
-      , node     = d3.select(targetDiv).select('svg').node();
+      , node     = targetDiv.select('svg').node();
 
     var text = grabSVG(node);
     var dataUrl = 'data:image/svg+xml;base64,' + btoa(text);
 
-    var a = d3.select(targetLink)
-      .append('a')
+    var a = targetLink
+      .append('div').append('a')
       .attr("download", filename + ".svg")
       .attr("type", "image/svg+xml")
       .attr("href", dataUrl)

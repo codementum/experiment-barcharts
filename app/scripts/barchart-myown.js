@@ -8,7 +8,7 @@ define(['d3', 'd3chart'], function () {
       c.w        = 300;
       c.h        = 300;
       c.pad      = 20;
-      c.barWidth = 30;
+      c.barWidth = 10;
       c.hardMax  = 40;
       c.xScale   = d3.scale.linear();
       c.yScale   = d3.scale.linear();

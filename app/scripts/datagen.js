@@ -134,7 +134,7 @@ define(['d3'], function () {
   }
 
   function randomizeData(len) { 
-    var max = 36;
+    var max = 36; // TODO this limits the number of bars we can add
     var min = 1;
   
     var d = [];

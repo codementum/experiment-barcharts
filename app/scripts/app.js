@@ -2,70 +2,42 @@
 define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], function (datagen, util) {
   'use strict';
 
+  var level = 'medium'
+    , minSum = 90
+    , charts = [
+      { name: 'nonAdjacent_5_10', dist: 5, bars: 10},
+      { name: 'nonAdjacent_10_20', dist: 10, bars: 20},
+      { name: 'nonAdjacent_17_35', dist: 17, bars: 35}
+    ];
+
   function init() {
-    // Since we only need five, do it the hard way.
+    charts.forEach(makeChart);
+  }
 
-    // make initial dataset
-    var level = 'high';
-    var d = datagen.generate(10, level, 90);
-
+  function updateMetadata(d) {
     d3.select('#metadata').select('textarea')
-      .attr('rows', 10)
-      .attr('cols', 20)
-      .text(JSON.stringify(d.metadata));
-
-    // make adjacent
-    d.data = datagen.makeAdjacent(d.data);
-    d3.select('#vis-adjacent .vis')
-      .append('svg')
+      .text(JSON.stringify(d));
+  }
+  
+  // TODO re-add functionality for adjacent
+  function makeChart(c) {
+    var d = datagen.generate(c.bars, level, minSum);
+    d.data = datagen.makeNonAdjacent(d.data, c.dist);
+  
+    var ins = d3.select('#bars').append('div')
+      .classed('span2 instructions', true)
+      .text(c.name);
+  
+    var vis = d3.select('#bars').append('div')
+      .attr('id', c.name)
+      .classed('span8 vis', true);
+  
+    vis.append('svg')
       .chart('barchart-myown')
       .draw(d.data);
-    util.download('#vis-adjacent .vis', '#vis-adjacent .instructions', 'bar-adjacent-'+level);
-    
-    // make nonAdjacentOne
-    d.data = datagen.makeNonAdjacent(d.data, 1);
-    d3.select('#vis-nonAdjacentOne .vis')
-      .append('svg')
-      .chart('barchart-myown')
-      .draw(d.data);
-    util.download('#vis-nonAdjacentOne .vis', '#vis-nonAdjacentOne .instructions', 'bar-nonAdjacentOne-'+level);
-    
-    // make nonAdjacentThree
-    d.data = datagen.makeNonAdjacent(d.data, 3);
-    d3.select('#vis-nonAdjacentThree .vis')
-      .append('svg')
-      .chart('barchart-myown')
-      .draw(d.data);
-    util.download('#vis-nonAdjacentThree .vis', '#vis-nonAdjacentThree .instructions', 'bar-nonAdjacentThree-'+level);
-    
-    // make nonAdjacentFive
-    d.data = datagen.makeNonAdjacent(d.data, 5);
-    d3.select('#vis-nonAdjacentFive .vis')
-      .append('svg')
-      .chart('barchart-myown')
-      .draw(d.data);
-    util.download('#vis-nonAdjacentFive .vis', '#vis-nonAdjacentFive .instructions', 'bar-nonAdjacentFive-'+level);
-
-    // make nonAdjacentSeve
-    d.data = datagen.makeNonAdjacent(d.data, 7);
-    d3.select('#vis-nonAdjacentSeven .vis')
-      .append('svg')
-      .chart('barchart-myown')
-      .draw(d.data);
-    util.download('#vis-nonAdjacentSeven .vis', '#vis-nonAdjacentSeven .instructions', 'bar-nonAdjacentSeven-'+level);
-
-    /*
-    var remake = d3.select('#vis-remake .vis')
-      .append('svg')
-      .attr('height', 300)
-      .attr('width', 600)
-      .chart('barchart-remake');
-
-    remake.draw(d.data);
-    remake.max(40);
-
-    util.download('#vis-remake .vis', '#vis-remake .instructions', 'tested');
-    */
+  
+    util.download(vis, ins, c.name+'-'+level);
+    updateMetadata(d.metadata);
   }
 
   return {
