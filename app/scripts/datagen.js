@@ -5,14 +5,6 @@ define(['d3'], function () {
   // TODO allow integration of existing bars and A/B choices into a chart. 
   // OR: define exact criteria for the levels
   
-  //var criteria = {
-  //  "low":          {"min": 0.89, "max":0.90},
-  //  "mediumLow":    {"min": 0.69, "max":0.70},
-  //  "medium":       {"min": 0.49, "max":0.50},
-  //  "mediumHigh":   {"min": 0.29, "max":0.30},
-  //  "high":         {"min": 0.09, "max":0.10}
-  //};
-
   var criteria = {
     "low":          {"min": 0.80, "max":0.99},
     "mediumLow":    {"min": 0.60, "max":0.80},
@@ -24,14 +16,13 @@ define(['d3'], function () {
   var dataset = [];
   var metadata = {};
 
-  function generate(length, criteriaSelection, minSum, adjacency, adjacencyLength) {
+  function generate(length, criteriaSelection, adjacency, adjacencyLength) {
     var attempt = null;
     var arr = null;
 
     while (!attempt) {
       arr = randomizeData(length);
-      if(sum(arr) > minSum)
-        attempt = mark(arr, criteria[criteriaSelection]);
+      attempt = mark(arr, criteria[criteriaSelection]);
     }
 
     dataset = constructLabeledDataset(arr, attempt);
