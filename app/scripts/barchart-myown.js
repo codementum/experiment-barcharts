@@ -70,7 +70,7 @@ define(['d3', 'd3chart'], function () {
         insert: function() {
           return this.append('rect')
                   .style('stroke', 'black')
-                  .style('fill', 'white');
+                  .style('fill', 'none');
         },
 
         events: {
