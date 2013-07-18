@@ -2,13 +2,14 @@
 define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], function (datagen, util) {
   'use strict';
 
-  var level = 'medium'
-    , minSum = 90
+  var level = 'high'
     , charts = [
       { name: 'nonAdjacent_5_10', dist: 5, bars: 10},
       { name: 'nonAdjacent_10_20', dist: 10, bars: 20},
-      { name: 'nonAdjacent_17_35', dist: 17, bars: 35}
-    ];
+      { name: 'nonAdjacent_10_20', dist: 15, bars: 30},
+      { name: 'nonAdjacent_20_40', dist: 20, bars: 40}
+    ]
+    , d;
 
   function init() {
     charts.forEach(makeChart);
@@ -21,8 +22,11 @@ define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart']
   
   // TODO re-add functionality for adjacent
   function makeChart(c) {
-    var d = datagen.generate(c.bars, level, minSum);
-    d.data = datagen.makeNonAdjacent(d.data, c.dist);
+    if(d && d.metadata)
+      d = datagen.generate(c.bars, level, c.dist, d.metadata);
+    else
+      d = datagen.generate(c.bars, level, c.dist);
+//    d.data = datagen.makeNonAdjacent(d.data, c.dist);
   
     var ins = d3.select('#bars').append('div')
       .classed('span2 instructions', true)

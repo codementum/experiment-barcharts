@@ -16,23 +16,29 @@ define(['d3'], function () {
   var dataset = [];
   var metadata = {};
 
-  function generate(length, criteriaSelection, adjacency, adjacencyLength) {
+  // marks return {"index": index, "value": value, "coindex": i, "covalue": covalue, "diff": diff};
+  function generate(length, criteriaSelection, adjacencyLength, marks) {
     var attempt = null;
     var arr = null;
 
     while (!attempt) {
-      arr = randomizeData(length);
-      attempt = mark(arr, criteria[criteriaSelection]);
+      arr = marks ? randomizeData(length, [marks.aValue, marks.bValue]) : randomizeData(length);
+      if(marks) {
+        attempt = {"index": 0, "value": arr[0], "coindex": 1, "covalue": arr[1], "diff":marks.diff};
+      }
+      else {
+        attempt = mark(arr, criteria[criteriaSelection]);
+      }
     }
 
-    dataset = constructLabeledDataset(arr, attempt);
+    dataset = marks 
+      ? constructLabeledDataset(arr, attempt, true)
+      : constructLabeledDataset(arr, attempt);
 
-    if(adjacency) {
-      if(adjacency === 'adjacent') {
-        dataset = makeAdjacent(dataset);
-      } else if (adjacency === 'nonadjacent' && adjacencyLength) {
-        dataset = makeNonAdjacent(dataset, adjacencyLength);
-      }
+    if(!adjacencyLength) {
+      dataset = makeAdjacent(dataset);
+    } else {
+      dataset = makeNonAdjacent(dataset, adjacencyLength);
     }
 
     metadata.aValue = dataset[find(dataset, 'A')].value;
@@ -47,9 +53,13 @@ define(['d3'], function () {
     };
   }
 
-  function constructLabeledDataset(arr, marks) {
+  function constructLabeledDataset(arr, marks, noSwitch) {
     var dataset = []
       , smallerIsA = randomInt(0, 2) > 1 ? true : false;
+
+    if(noSwitch) {
+      smallerIsA = true;
+    }
 
     arr.forEach(function(d, i) {
       var name = '';
@@ -135,11 +145,11 @@ define(['d3'], function () {
     return null;
   }
 
-  function randomizeData(len) { 
+  function randomizeData(len, begin) { 
     var max = 100; // TODO this limits the number of bars we can add
     var min = 1;
   
-    var d = [];
+    var d = begin ? begin : [];
   
     while(d.length < len) {
       var randomnumber = randomInt(min, max);
