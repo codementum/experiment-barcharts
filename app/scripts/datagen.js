@@ -2,10 +2,8 @@
 define(['d3'], function () {
   'use strict';
 
-  // TODO allow integration of existing bars and A/B choices into a chart. 
-  // OR: define exact criteria for the levels
-  
   var criteria = {
+    "practice":     {"min": 0.40, "max":0.60},
     "low":          {"min": 0.80, "max":0.99},
     "mediumLow":    {"min": 0.60, "max":0.80},
     "medium":       {"min": 0.40, "max":0.60},
@@ -16,7 +14,6 @@ define(['d3'], function () {
   var dataset = [];
   var metadata = {};
 
-  // marks return {"index": index, "value": value, "coindex": i, "covalue": covalue, "diff": diff};
   function generate(length, criteriaSelection, adjacencyLength, marks) {
     var attempt = null;
     var arr = null;
