@@ -2,7 +2,7 @@
 define(['d3', 'd3chart'], function () {
   'use strict';
 
-  d3.chart('barchart-myown', {
+  d3.chart('barchart', {
     initialize: function() {
       var c = this;
       c.w        = 600;

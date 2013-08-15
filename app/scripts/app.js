@@ -1,5 +1,5 @@
 /*global define, d3 */
-define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart'], function (datagen, util) {
+define(['datagen', 'util', 'barchart', 'd3', 'd3chart'], function (datagen, util) {
   'use strict';
 
   var id = '3';
@@ -37,7 +37,7 @@ define(['datagen', 'util', 'barchart-myown', 'barchart-remake', 'd3', 'd3chart']
       .classed('span8 vis', true);
   
     vis.append('svg')
-      .chart('barchart-myown')
+      .chart('barchart')
       .draw(d.data);
   
     util.download(vis, ins, c.name+'-'+level+'-'+id);
